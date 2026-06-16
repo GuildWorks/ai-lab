@@ -7,6 +7,8 @@
 
 > 📋 **コピペで使えるサンプルが欲しい人は [settings-examples.md](./settings-examples.md) へ。**
 > 本ドキュメントは考え方、サンプル集は実物のテンプレートを提供します。
+>
+> 🖨 **1枚で把握したい人は [チートシート（HTML）](./cheatsheet.html) / [PDF版](./cheatsheet.pdf) へ。** 印刷・共有用。
 
 ---
 
