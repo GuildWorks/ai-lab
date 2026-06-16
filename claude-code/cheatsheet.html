@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 設定チートシート</title>
+<style>
+  :root{
+    --ink:#1f2933; --muted:#6b7785; --line:#dfe3e8; --bg:#ffffff;
+    --share:#15803d; --share-bg:#e8f5ec;
+    --tmpl:#b45309; --tmpl-bg:#fdf3e3;
+    --deny:#b91c1c; --deny-bg:#fcebea;
+    --accent:#4f46e5; --accent-bg:#eef0fe;
+    --code-bg:#0f172a; --code-ink:#e2e8f0; --code-key:#7dd3fc; --code-str:#a7f3d0; --code-com:#7e8aa0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    color:var(--ink); background:#eef1f4; line-height:1.5; font-size:12px;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .page{
+    width:210mm; min-height:297mm; margin:10px auto; background:var(--bg);
+    padding:14mm 13mm; box-shadow:0 2px 12px rgba(0,0,0,.12);
+  }
+  h1{font-size:22px; margin:0 0 2px;}
+  .sub{color:var(--muted); font-size:11px; margin:0 0 14px;}
+  h2{font-size:14px; margin:16px 0 8px; padding-bottom:4px; border-bottom:2px solid var(--accent); color:var(--accent);}
+  h2 .n{display:inline-block; background:var(--accent); color:#fff; border-radius:5px; padding:0 7px; margin-right:7px; font-size:12px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .card{border:1px solid var(--line); border-radius:9px; padding:10px 11px;}
+  .card h3{margin:0 0 6px; font-size:12.5px; display:flex; align-items:center; gap:6px;}
+  .tag{font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:999px; white-space:nowrap;}
+  .t-share{background:var(--share-bg); color:var(--share);}
+  .t-tmpl{background:var(--tmpl-bg); color:var(--tmpl);}
+  .t-deny{background:var(--deny-bg); color:var(--deny);}
+  .card.share{background:var(--share-bg); border-color:#bfe3cb;}
+  .card.tmpl{background:var(--tmpl-bg); border-color:#f0d9ad;}
+  .card.deny{background:var(--deny-bg); border-color:#f3c5c2;}
+  .path{font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:var(--accent); background:var(--accent-bg); padding:1px 5px; border-radius:4px;}
+  ul{margin:5px 0 0; padding-left:16px;}
+  li{margin:2px 0;}
+  table{width:100%; border-collapse:collapse; margin-top:4px; font-size:11px;}
+  th,td{border:1px solid var(--line); padding:5px 7px; text-align:left; vertical-align:top;}
+  th{background:#f3f5f8; font-weight:700;}
+  code{font-family:ui-monospace,Menlo,monospace; font-size:10.5px; background:#f1f3f6; padding:1px 4px; border-radius:4px;}
+  pre{background:var(--code-bg); color:var(--code-ink); border-radius:8px; padding:9px 11px; margin:6px 0 0; overflow:auto; font-size:10px; line-height:1.45;}
+  pre .k{color:var(--code-key);} pre .s{color:var(--code-str);} pre .c{color:var(--code-com);}
+  .rules{display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px; margin-top:4px;}
+  .rule{border-radius:9px; padding:9px 11px; font-size:11px;}
+  .rule.ok{background:var(--share-bg);} .rule.no{background:var(--deny-bg);} .rule.tip{background:var(--accent-bg);}
+  .rule b{display:block; margin-bottom:3px; font-size:12px;}
+  .foot{margin-top:14px; padding-top:8px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; display:flex; justify-content:space-between;}
+  .flow{display:flex; align-items:stretch; gap:8px; margin-top:4px;}
+  .flow .step{flex:1; border:1px dashed var(--line); border-radius:9px; padding:9px; text-align:center;}
+  .flow .arrow{align-self:center; color:var(--muted); font-weight:700;}
+  .flow .step .big{font-size:13px; font-weight:700;}
+  @media print{
+    body{background:#fff;}
+    .page{margin:0; box-shadow:none; width:auto; min-height:auto; padding:11mm 11mm;}
+    h2{break-after:avoid;} .card,pre,table{break-inside:avoid;}
+  }
+  @page{size:A4; margin:0;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>Claude Code 設定チートシート</h1>
+  <p class="sub">設定は階層で重なる。<b>共有するもの</b>・<b>各自で持つもの</b>・<b>絶対に共有しないもの</b>を1枚で。詳細 → <code>claude-code/team-sharing.md</code> / <code>settings-examples.md</code></p>
+
+  <h2><span class="n">A</span>どこに何を置く？</h2>
+  <div class="flow">
+    <div class="step">
+      <div class="big">① ユーザー</div>
+      <span class="path">~/.claude/settings.json</span>
+      <div style="margin-top:5px;">マシン全体・各自<br><span class="tag t-tmpl">テンプレ配布</span></div>
+      <div style="margin-top:5px; color:var(--muted);">横断的に安全な<br>読取コマンド・通知</div>
+    </div>
+    <div class="arrow">▶</div>
+    <div class="step">
+      <div class="big">② プロジェクト共有</div>
+      <span class="path">&lt;repo&gt;/.claude/settings.json</span>
+      <div style="margin-top:5px;">git に commit<br><span class="tag t-share">共有</span></div>
+      <div style="margin-top:5px; color:var(--muted);">共通の禁止ルール＋<br>そのリポの安全コマンド</div>
+    </div>
+    <div class="arrow">▶</div>
+    <div class="step">
+      <div class="big">③ プロジェクト個人</div>
+      <span class="path">&lt;repo&gt;/.claude/settings.local.json</span>
+      <div style="margin-top:5px;">gitignore<br><span class="tag t-deny">共有しない</span></div>
+      <div style="margin-top:5px; color:var(--muted);">絶対パス・個人env・<br>plugin ON/OFF</div>
+    </div>
+  </div>
+  <p style="margin:6px 0 0; color:var(--muted); font-size:10.5px;">優先順位（強い順）: Enterprise &gt; ① ユーザー &gt; ③ 個人 &gt; ② 共有</p>
+
+  <h2><span class="n">B</span>共有可否の早見表</h2>
+  <table>
+    <tr><th style="width:42%;">対象</th><th style="width:16%;">可否</th><th>配り方</th></tr>
+    <tr><td>共有 <code>settings.json</code>（deny / hooks / 安全コマンド）</td><td><span class="tag t-share">共有する</span></td><td>git にコミット</td></tr>
+    <tr><td><code>CLAUDE.md</code> / <code>agents</code> / <code>commands</code> / <code>skills</code> / <code>.mcp.json</code></td><td><span class="tag t-share">共有する</span></td><td>git にコミット</td></tr>
+    <tr><td>ユーザー <code>~/.claude/settings.json</code></td><td><span class="tag t-tmpl">テンプレのみ</span></td><td>雛形を配布→各自コピー</td></tr>
+    <tr><td>hook スクリプト（絶対パス禁止・要レビュー）</td><td><span class="tag t-tmpl">テンプレのみ</span></td><td><code>$CLAUDE_PROJECT_DIR</code> を使う</td></tr>
+    <tr><td>APIキー / トークン / env のパスワード</td><td><span class="tag t-deny">共有禁止</span></td><td>local に各自設定</td></tr>
+    <tr><td>絶対パス入り設定 / <code>settings.local.json</code> / 履歴・cache</td><td><span class="tag t-deny">共有禁止</span></td><td>個人ローカルのみ</td></tr>
+  </table>
+
+  <h2><span class="n">C</span>3つの鉄則</h2>
+  <div class="rules">
+    <div class="rule ok"><b>✅ deny は揃える</b>破壊的コマンド（<code>rm -rf</code>）と秘密情報の Read 禁止を全員に。事故防止効果が最大。</div>
+    <div class="rule no"><b>🚫 シークレットを共有に書かない</b>パスワード・トークンは <code>settings.local.json</code> へ。</div>
+    <div class="rule tip"><b>💡 絶対パスは共有に書かない</b><code>/Users/...</code> は local へ。共有では <code>**/</code> パターンで一般化。</div>
+  </div>
+
+  <div class="foot">
+    <span>Claude Code 設定チートシート — GuildWorks/ai-lab</span>
+    <span>1 / 2</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <h2><span class="n">D</span>コピペ用サンプル（要点）</h2>
+  <div class="grid3">
+    <div class="card share">
+      <h3>① ユーザー <span class="tag t-tmpl">各自</span></h3>
+      <div class="path">~/.claude/settings.json</div>
+<pre><span class="k">"allow"</span>: [
+  <span class="s">"Bash(git log:*)"</span>,
+  <span class="s">"Bash(git diff:*)"</span>,
+  <span class="s">"Bash(ls:*)"</span>, <span class="s">"Bash(cat:*)"</span>,
+  <span class="s">"Bash(grep:*)"</span>, <span class="s">"Bash(rg:*)"</span>,
+  <span class="s">"Bash(jq:*)"</span>, <span class="s">"Bash(find:*)"</span>,
+  <span class="s">"Bash(gh pr view:*)"</span>,
+  <span class="s">"Bash(gh pr diff:*)"</span>
+],
+<span class="k">"deny"</span>: [ <span class="s">"Bash(sudo:*)"</span> ]</pre>
+      <ul>
+        <li>横断的に安全な<b>読取専用</b>だけ</li>
+        <li>許可ダイアログが激減</li>
+      </ul>
+    </div>
+
+    <div class="card tmpl">
+      <h3>② 共有 <span class="tag t-share">commit</span></h3>
+      <div class="path">.claude/settings.json</div>
+<pre><span class="k">"deny"</span>: [
+  <span class="s">"Bash(rm -rf:*)"</span>,
+  <span class="s">"Bash(git push --force:*)"</span>,
+  <span class="s">"Bash(chmod 777:*)"</span>,
+  <span class="s">"Bash(sudo:*)"</span>,
+  <span class="s">"Read(.env)"</span>, <span class="s">"Read(.env.*)"</span>,
+  <span class="s">"Read(**/*.pem)"</span>,
+  <span class="s">"Read(**/*.key)"</span>,
+  <span class="s">"Read(**/credentials.yml.enc)"</span>
+]</pre>
+      <ul>
+        <li>+ そのリポの安全コマンドを allow</li>
+        <li>+ main直push禁止 hook（下記E）</li>
+      </ul>
+    </div>
+
+    <div class="card deny">
+      <h3>③ 個人 <span class="tag t-deny">gitignore</span></h3>
+      <div class="path">.claude/settings.local.json</div>
+<pre><span class="k">"allow"</span>: [
+  <span class="s">"Bash(gh pr view:*)"</span>,
+  <span class="s">"Read(/Users/&lt;name&gt;/.rbenv/**)"</span>,
+  <span class="s">"Read(/opt/homebrew/bin/**)"</span>
+],
+<span class="k">"env"</span>: {
+  <span class="s">"MYSQL_PASSWORD"</span>: <span class="s">"..."</span>
+}</pre>
+      <ul>
+        <li>絶対パスは先頭 <code>/</code> <b>1つ</b></li>
+        <li>パスワード等はここだけ</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2><span class="n">E</span>そのリポの安全コマンドを <code>allow</code>（言語別）</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>🛤 Rails</h3>
+<pre><span class="c">// bin 運用</span>
+<span class="s">"Bash(bin/rspec:*)"</span>, <span class="s">"Bash(bin/rubocop:*)"</span>,
+<span class="s">"Bash(bin/rails:*)"</span>, <span class="s">"Bash(bin/rake:*)"</span>
+<span class="c">// bundle 運用</span>
+<span class="s">"Bash(bundle exec rspec:*)"</span></pre>
+    </div>
+    <div class="card">
+      <h3>⚛ フロント（npm）</h3>
+<pre><span class="s">"Bash(npm run lint:*)"</span>,
+<span class="s">"Bash(npm run test:*)"</span>,
+<span class="s">"Bash(npm run typecheck:*)"</span>,
+<span class="s">"Bash(npm run build:*)"</span></pre>
+    </div>
+  </div>
+
+  <h2><span class="n">F</span>main 直push を止める hook（共有 settings.json）</h2>
+<pre><span class="k">"hooks"</span>: { <span class="k">"PreToolUse"</span>: [{ <span class="k">"matcher"</span>: <span class="s">"Bash"</span>, <span class="k">"hooks"</span>: [{
+  <span class="k">"type"</span>: <span class="s">"command"</span>,
+  <span class="k">"command"</span>: <span class="s">"CMD=$(echo \"$TOOL_INPUT\" | jq -r '.command // empty'); if echo \"$CMD\" | grep -Eq 'git push .*(origin )?(main|master)\\b'; then echo '{\"block\":true,\"reason\":\"main直pushは禁止。PRを作成してください\"}'; exit 2; fi; exit 0"</span>
+}]}]}</pre>
+
+  <h2><span class="n">G</span>よくある間違い</h2>
+  <table>
+    <tr><th style="width:34%;">症状</th><th style="width:33%;">原因</th><th>対処</th></tr>
+    <tr><td>local の Read 許可が効かない</td><td>先頭スラッシュが <code>//</code>（2つ）</td><td><code>/Users/...</code> に直す</td></tr>
+    <tr><td>他人の環境で hook が壊れる</td><td>絶対パスをハードコード</td><td><code>$CLAUDE_PROJECT_DIR</code> / <code>$HOME</code></td></tr>
+    <tr><td>秘密情報が git に乗った</td><td><code>env</code> を共有に記載</td><td>local へ移し履歴から除去</td></tr>
+    <tr><td>許可ダイアログが多すぎる</td><td>安全コマンド未許可</td><td>① か ② の allow に追加</td></tr>
+    <tr><td>gh で意図せず書き込み</td><td><code>gh:*</code> 全許可</td><td><code>gh pr view</code> 等に絞る</td></tr>
+  </table>
+
+  <div class="foot">
+    <span>Claude Code 設定チートシート — GuildWorks/ai-lab</span>
+    <span>2 / 2</span>
+  </div>
+</div>
+
+</body>
+</html>
